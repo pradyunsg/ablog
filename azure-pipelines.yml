@@ -5,30 +5,30 @@ schedules:
     displayName: Daily midnight build
     branches:
       include:
-      - main
+        - main
     always: true
 
 resources:
   repositories:
-  - repository: OpenAstronomy
-    type: github
-    endpoint: sunpy
-    name: OpenAstronomy/azure-pipelines-templates
-    ref: master
+    - repository: OpenAstronomy
+      type: github
+      endpoint: sunpy
+      name: OpenAstronomy/azure-pipelines-templates
+      ref: master
 
 trigger:
   branches:
     include:
-    - '*'
+      - "*"
     exclude:
-    - '*backport*'
+      - "*backport*"
   tags:
     include:
-    - 'v*'
+      - "v*"
     exclude:
-    - '*dev*'
-    - '*pre*'
-    - '*post*'
+      - "*dev*"
+      - "*pre*"
+      - "*post*"
 
 pr:
   autoCancel: true
@@ -37,38 +37,38 @@ stages:
   - stage: FirstPhaseTests
     displayName: Core Tests
     jobs:
-    - template: run-tox-env.yml@OpenAstronomy
-      parameters:
-        submodules: false
-        coverage: codecov
-        libraries:
-          apt:
-            - pandoc
-        envs:
-          - linux: codestyle
-            name: python_codestyle
-            pytest: false
-          - linux: py38-sphinx3
+      - template: run-tox-env.yml@OpenAstronomy
+        parameters:
+          submodules: false
+          coverage: codecov
+          libraries:
+            apt:
+              - pandoc
+          envs:
+            - linux: codestyle
+              name: python_codestyle
+              pytest: false
+            - linux: py38-sphinx3
 
   - stage: SecondPhaseTests
     displayName: Stage 2 Tests
     dependsOn: FirstPhaseTests
     jobs:
-    - template: run-tox-env.yml@OpenAstronomy
-      parameters:
-        submodules: false
-        coverage: codecov
-        libraries:
-          brew:
-            - pandoc
-          choco:
-            - pandoc
-          apt:
-            - pandoc
-        envs:
-          - macos: py37-sphinx2
-          - windows: py37-sphinx3
-          - linux: py310-sphinx4
-          - linux: py38-sphinxdev
-          - linux: py39-conda
-          - linux: py39-docs
+      - template: run-tox-env.yml@OpenAstronomy
+        parameters:
+          submodules: false
+          coverage: codecov
+          libraries:
+            brew:
+              - pandoc
+            choco:
+              - pandoc
+            apt:
+              - pandoc
+          envs:
+            - macos: py37-sphinx2
+            - windows: py37-sphinx3
+            - linux: py310-sphinx4
+            - linux: py38-sphinxdev
+            - linux: py39-conda
+            - linux: py39-docs
